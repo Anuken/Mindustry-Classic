@@ -1,6 +1,11 @@
 ![Imgur](https://i.imgur.com/w4N0yhv.png)
 
-A pixelated sandbox tower defense game made using [LibGDX](https://libgdx.badlogicgames.com/).
+An old, classic version of the pixelated sandbox tower defense game known as Mindustry.
+
+### Important Notice
+
+This repository is **no longer being maintained.** No features will be implemented, no bugs will be fixed and no additional releases will be made unless absolutely necessary.
+If you find an issue and know how to fix it, feel free to submit a pull request. **Issues will be ignored.**
 
 ### Building
 

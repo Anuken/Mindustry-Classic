@@ -216,6 +216,8 @@ public class InputProxy implements Input{
         input.setCursorPosition(x, y);
     }
 
+
+
     public InputProxy(Input input){
         this.input = input;
     }
