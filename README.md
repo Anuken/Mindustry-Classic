@@ -25,4 +25,4 @@ _Building:_ `./gradlew desktop:dist`
 ---
 
 Gradle may take up to several minutes to download files. Be patient. <br>
-After building, the output .JAR file should be in the output JAR file should be in `/desktop/build/libs/desktop-release.jar.`tore/apps/details?id=io.anuke.mindustry&hl=en"><img src="https://i.imgur.com/8dF6l81.png" width="auto" height="75"></a>
+After building, the output .JAR file should be in the output JAR file should be in `/desktop/build/libs/desktop-release.jar.`
