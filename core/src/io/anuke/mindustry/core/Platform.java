@@ -1,16 +1,14 @@
 package io.anuke.mindustry.core;
 
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Base64Coder;
-import io.anuke.mindustry.core.ThreadHandler.ThreadProvider;
-import io.anuke.ucore.core.Settings;
-import io.anuke.ucore.entities.Entity;
-import io.anuke.ucore.entities.EntityGroup;
-import io.anuke.ucore.scene.ui.TextField;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.files.*;
+import com.badlogic.gdx.utils.*;
+import io.anuke.mindustry.core.ThreadHandler.*;
+import io.anuke.ucore.core.*;
+import io.anuke.ucore.entities.*;
+import io.anuke.ucore.scene.ui.*;
 
-import java.util.Date;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 
 public abstract class Platform {
     /**Each separate game platform should set this instance to their own implementation.*/
@@ -32,8 +30,11 @@ public abstract class Platform {
 	public void updateRPC(){}
 	/**Called when the game is exited.*/
 	public void onGameExit(){}
-	/**Open donation dialog. Currently android only.*/
-	public void openDonations(){}
+	/**Open donation dialog. */
+	public void openDonations(){
+		//TODO change to mindustry classic URL
+		Gdx.net.openURI("https://anuke.itch.io/mindustry/purchase");
+	}
 	/**Whether discord RPC is supported.*/
 	public boolean hasDiscord(){return true;}
 	/**Request Android permissions for writing files.*/

@@ -48,7 +48,6 @@ public class UI extends SceneModule{
 	public BansDialog bans;
 	public AdminsDialog admins;
 	public TraceDialog traces;
-	public ChangelogDialog changelog;
 
 	public final MenuFragment menufrag = new MenuFragment();
     public final ToolFragment toolfrag = new ToolFragment();
@@ -153,7 +152,6 @@ public class UI extends SceneModule{
 		language = new LanguageDialog();
 		settings = new SettingsMenuDialog();
 		paused = new PausedDialog();
-		changelog = new ChangelogDialog();
 		about = new AboutDialog();
 		host = new HostDialog();
 		bans = new BansDialog();

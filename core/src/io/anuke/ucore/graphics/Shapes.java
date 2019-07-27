@@ -34,7 +34,6 @@ public class Shapes {
         Core.batch.draw(Draw.region("shape-3"), x - width/2f, y - oy, width/2f, oy, width, length, 1f, 1f, rotation - 90);
     }
 
-    @Deprecated
     public static void lineShot(float x, float y, float angle, int amount, float fin, float len, float thick, float falloff) {
         float length = len;
         float thickness = thick;
@@ -46,7 +45,6 @@ public class Shapes {
         }
     }
 
-    @Deprecated
     public static void lineShotFade(float x, float y, float angle, int amount, float fin, float len, float thick, float falloff, float thickadd) {
         float length = len;
         float thickness = thick;

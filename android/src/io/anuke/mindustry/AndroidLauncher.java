@@ -12,10 +12,6 @@ import android.util.Log;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.utils.Base64Coder;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.security.ProviderInstaller;
 import io.anuke.kryonet.DefaultThreadImpl;
 import io.anuke.kryonet.KryoClient;
 import io.anuke.kryonet.KryoServer;
@@ -70,11 +66,6 @@ public class AndroidLauncher extends AndroidApplication{
 			@Override
 			public String getLocaleName(Locale locale){
 				return locale.getDisplayName(locale);
-			}
-
-			@Override
-			public void openDonations() {
-				showDonations();
 			}
 
 			@Override
@@ -139,15 +130,6 @@ public class AndroidLauncher extends AndroidApplication{
 			}
 		};
 
-		try {
-			ProviderInstaller.installIfNeeded(this);
-		} catch (GooglePlayServicesRepairableException e) {
-			GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-			apiAvailability.getErrorDialog(this, e.getConnectionStatusCode(), 0).show();
-		} catch (GooglePlayServicesNotAvailableException e) {
-			Log.e("SecurityException", "Google Play Services not available.");
-		}
-
 		if(doubleScaleTablets && isTablet(this.getContext())){
 			Unit.dp.addition = 0.5f;
 		}
@@ -172,10 +154,5 @@ public class AndroidLauncher extends AndroidApplication{
 	private boolean isTablet(Context context) {
 		TelephonyManager manager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 		return manager.getPhoneType() == TelephonyManager.PHONE_TYPE_NONE;
-	}
-	
-	private void showDonations(){
-		Intent intent = new Intent(this, DonationsActivity.class);
-		startActivity(intent);
 	}
 }

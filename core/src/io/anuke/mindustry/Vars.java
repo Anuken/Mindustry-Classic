@@ -47,8 +47,6 @@ public class Vars{
 	public static final float enemyspawnspace = 65;
 	//discord group URL
 	public static final String discordURL = "https://discord.gg/mindustry";
-
-	public static final String releasesURL = "https://api.github.com/repos/Anuken/Mindustry/releases";
 	//directory for user-created map data
 	public static final FileHandle customMapDirectory = gwt ? null : UCore.isAssets() ?
 			Gdx.files.local("../../desktop/mindustry-maps") : Gdx.files.local("mindustry-maps/");

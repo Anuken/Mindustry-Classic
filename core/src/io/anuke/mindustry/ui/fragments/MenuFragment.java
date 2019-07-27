@@ -44,7 +44,7 @@ public class MenuFragment implements Fragment{
 
 					add(new MenuButton("icon-info", "$text.about.button", ui.about::show));
 
-					add(new MenuButton("icon-menu", "$text.changelog.title", ui.changelog::show));
+					add(new MenuButton("icon-donate", "$text.donate", Platform.instance::openDonations));
 
 					row();
 					
