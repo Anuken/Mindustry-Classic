@@ -25,7 +25,7 @@ public class BackgroundFragment implements Fragment {
                     back.getRegionWidth()*backscl, back.getRegionHeight()*backscl);
 
             boolean portrait = Gdx.graphics.getWidth() < Gdx.graphics.getHeight();
-            float logoscl = (int)Unit.dp.scl(7) * (portrait ? 5f/7f : 1f);
+            float logoscl = (int)Unit.dp.scl(6) * (portrait ? 5f/7f : 1f);
             TextureRegion logo = Core.skin.getRegion("logotext");
             float logow = logo.getRegionWidth()*logoscl;
             float logoh = logo.getRegionHeight()*logoscl;
