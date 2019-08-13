@@ -26,7 +26,7 @@ public class MenuFragment implements Fragment{
 
 					defaults().size(w, 70f).padTop(5).padRight(5);
 
-					add(new MenuButton("icon-play-2", "$text.play", MenuFragment.this::showPlaySelect)).width(bw).colspan(2);
+					add(new MenuButton("icon-play-2", "classic", MenuFragment.this::showPlaySelect)).width(bw).colspan(2);
 
 					row();
 

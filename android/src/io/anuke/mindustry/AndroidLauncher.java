@@ -1,37 +1,32 @@
 package io.anuke.mindustry;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.Settings.Secure;
-import android.telephony.TelephonyManager;
-import android.util.Log;
-import com.badlogic.gdx.backends.android.AndroidApplication;
-import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.badlogic.gdx.utils.Base64Coder;
-import io.anuke.kryonet.DefaultThreadImpl;
-import io.anuke.kryonet.KryoClient;
-import io.anuke.kryonet.KryoServer;
-import io.anuke.mindustry.core.ThreadHandler.ThreadProvider;
-import io.anuke.mindustry.core.Platform;
+import android.*;
+import android.content.*;
+import android.content.pm.*;
+import android.os.*;
+import android.provider.Settings.*;
+import android.telephony.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.backends.android.*;
+import com.badlogic.gdx.files.*;
+import com.badlogic.gdx.utils.*;
+import io.anuke.kryonet.*;
+import io.anuke.mindustry.core.*;
+import io.anuke.mindustry.core.ThreadHandler.*;
 import io.anuke.mindustry.net.Net;
-import io.anuke.ucore.core.Settings;
-import io.anuke.ucore.scene.ui.TextField;
-import io.anuke.ucore.scene.ui.layout.Unit;
+import io.anuke.ucore.core.*;
+import io.anuke.ucore.scene.ui.*;
+import io.anuke.ucore.scene.ui.layout.*;
+import io.anuke.ucore.util.*;
 
-import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Random;
+import java.lang.System;
+import java.text.*;
+import java.util.*;
 
 public class AndroidLauncher extends AndroidApplication{
 	boolean doubleScaleTablets = true;
 	int WRITE_REQUEST_CODE = 1;
+	Runnable permCallback;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -70,21 +65,20 @@ public class AndroidLauncher extends AndroidApplication{
 
 			@Override
 			public void requestWritePerms() {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-					if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-							checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-						requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-								Manifest.permission.READ_EXTERNAL_STORAGE}, WRITE_REQUEST_CODE);
-					}else{
-
-						if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-							requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_REQUEST_CODE);
-						}
-
-						if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-							requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, WRITE_REQUEST_CODE);
-						}
+				if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M || (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
+					if(permCallback != null){
+						Gdx.app.postRunnable(permCallback);
+						permCallback = null;
 					}
+				}else{
+					ArrayList<String> perms = new ArrayList<>();
+					if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+						perms.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+					}
+					if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+						perms.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+					}
+					requestPermissions(perms.toArray(new String[0]), WRITE_REQUEST_CODE);
 				}
 			}
 
@@ -139,9 +133,67 @@ public class AndroidLauncher extends AndroidApplication{
         Net.setClientProvider(new KryoClient());
         Net.setServerProvider(new KryoServer());
 
-        initialize(new Mindustry(), config);
+        initialize(new Mindustry(){
+			@Override
+			public void init(){
+				super.init();
+
+				//mindustry, non-classic is installed, check for classic files.
+				if(isPackageInstalled("io.anuke.mindustry")){
+					if(!Settings.getBool("v40importcheck", false)){
+						Settings.putBool("v40importcheck", true);
+						Settings.save();
+
+						Gdx.app.postRunnable(() -> {
+							Gdx.app.postRunnable(() -> {
+								Vars.ui.showConfirm("Import 3.5 Data", "A Mindustry installation has been detected.\nCheck for exported Mindustry Classic save files from 3.5 build 40?", () -> {
+									permCallback = () -> {
+										if(Gdx.files.external("MindustryClassic").exists()){
+											Vars.ui.showConfirm("Confirm Import", "Exported save data found. Import it now and restart?\n\n[scarlet]This will clear all existing game data and exit the app.", () -> {
+												FileHandle saves = Gdx.files.external("MindustryClassic").child("mindustry-saves");
+												if(saves.exists()){
+													Gdx.files.local("mindustry-saves").deleteDirectory();
+													saves.copyTo(Gdx.files.local("test").parent());
+													Log.info("copied saves");
+												}
+
+												FileHandle maps = Gdx.files.external("MindustryClassic").child("mindustry-maps");
+												if(maps.exists()){
+													Gdx.files.local("mindustry-maps").deleteDirectory();
+													maps.copyTo(Gdx.files.local("test").parent());
+													Log.info("copied maps");
+												}
+												Log.info(Arrays.toString(Gdx.files.local("test").parent().list()));
+
+												System.exit(0);
+											});
+										}else{
+											Vars.ui.showInfo("No exported data found.");
+										}
+									};
+									Platform.instance.requestWritePerms();
+								});
+							});
+						});
+					}
+				}
+			}
+		}, config);
 	}
-	
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+		if(requestCode == WRITE_REQUEST_CODE){
+			for(int i : grantResults){
+				if(i != PackageManager.PERMISSION_GRANTED) return;
+			}
+
+			if(permCallback != null){
+				Gdx.app.postRunnable(permCallback);
+			}
+		}
+	}
+
 	private boolean isPackageInstalled(String packagename) {
 	    try {
 	    	getPackageManager().getPackageInfo(packagename, 0);
