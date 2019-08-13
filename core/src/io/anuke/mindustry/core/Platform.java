@@ -32,8 +32,7 @@ public abstract class Platform {
 	public void onGameExit(){}
 	/**Open donation dialog. */
 	public void openDonations(){
-		//TODO change to mindustry classic URL
-		Gdx.net.openURI("https://anuke.itch.io/mindustry/purchase");
+		Gdx.net.openURI("https://anuke.itch.io/mindustry-classic/donate");
 	}
 	/**Whether discord RPC is supported.*/
 	public boolean hasDiscord(){return true;}

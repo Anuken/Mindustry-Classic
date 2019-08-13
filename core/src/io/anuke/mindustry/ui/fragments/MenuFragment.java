@@ -26,7 +26,7 @@ public class MenuFragment implements Fragment{
 
 					defaults().size(w, 70f).padTop(5).padRight(5);
 
-					add(new MenuButton("icon-play-2", "classic", MenuFragment.this::showPlaySelect)).width(bw).colspan(2);
+					add(new MenuButton("icon-play-2", "$play", MenuFragment.this::showPlaySelect)).width(bw).colspan(2);
 
 					row();
 
@@ -102,7 +102,7 @@ public class MenuFragment implements Fragment{
 		new table(){{
 			visible(() -> state.is(State.menu));
 			abottom().aleft();
-			new label("Mindustry " + Version.code + " " + Version.type + " / " + Version.buildName);
+			new label("Mindustry " + Version.code + " / " + Version.buildName);
 		}}.end();
 	}
 

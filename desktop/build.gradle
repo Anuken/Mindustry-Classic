@@ -73,6 +73,7 @@ task clearOut(type: Delete){
 }
 
 //note: call desktop:dist beforehand
+//or don't, because this is all terrible and doesn't even work
 task packrCmd() {
 
     doLast {
