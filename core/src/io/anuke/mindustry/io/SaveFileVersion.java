@@ -26,13 +26,13 @@ public abstract class SaveFileVersion {
 
     public static void writeString(DataOutputStream stream, String string) throws IOException{
         stream.writeByte(string.length());
-        stream.writeBytes(string);
+        stream.write(string.getBytes("UTF-8"));
     }
 
     public static String readString(DataInputStream stream) throws IOException{
         int length = stream.readByte();
         byte[] result = new byte[length];
         stream.read(result);
-        return new String(result);
+        return new String(result, "UTF-8");
     }
 }

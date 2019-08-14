@@ -13,6 +13,7 @@ import io.anuke.mindustry.world.Block;
 import io.anuke.ucore.entities.Entities;
 import io.anuke.ucore.entities.EntityGroup;
 
+import java.io.*;
 import java.nio.ByteBuffer;
 
 /**Class for storing all packets.*/
@@ -61,25 +62,33 @@ public class Packets {
 
         @Override
         public void write(ByteBuffer buffer) {
-            buffer.putInt(Version.build);
-            buffer.put((byte)name.getBytes().length);
-            buffer.put(name.getBytes());
-            buffer.put(android ? (byte)1 : 0);
-            buffer.putInt(color);
-            buffer.put(uuid);
+            try{
+                buffer.putInt(Version.build);
+                buffer.put((byte)name.getBytes().length);
+                buffer.put(name.getBytes("UTF-8"));
+                buffer.put(android ? (byte)1 : 0);
+                buffer.putInt(color);
+                buffer.put(uuid);
+            }catch(UnsupportedEncodingException e){
+                throw new RuntimeException(e);
+            }
         }
 
         @Override
         public void read(ByteBuffer buffer) {
-            version = buffer.getInt();
-            byte length = buffer.get();
-            byte[] bytes = new byte[length];
-            buffer.get(bytes);
-            name = new String(bytes);
-            android = buffer.get() == 1;
-            color = buffer.getInt();
-            uuid = new byte[8];
-            buffer.get(uuid);
+            try{
+                version = buffer.getInt();
+                byte length = buffer.get();
+                byte[] bytes = new byte[length];
+                buffer.get(bytes);
+                name = new String(bytes, "UTF-8");
+                android = buffer.get() == 1;
+                color = buffer.getInt();
+                uuid = new byte[8];
+                buffer.get(uuid);
+            }catch(UnsupportedEncodingException e){
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -334,31 +343,39 @@ public class Packets {
 
         @Override
         public void write(ByteBuffer buffer) {
-            if(name != null) {
-                buffer.putShort((short) name.getBytes().length);
-                buffer.put(name.getBytes());
-            }else{
-                buffer.putShort((short)-1);
+            try{
+                if(name != null){
+                    buffer.putShort((short)name.getBytes().length);
+                    buffer.put(name.getBytes());
+                }else{
+                    buffer.putShort((short)-1);
+                }
+                buffer.putShort((short)text.getBytes().length);
+                buffer.put(text.getBytes("UTF-8"));
+                buffer.putInt(id);
+            }catch(UnsupportedEncodingException e){
+                throw new RuntimeException(e);
             }
-            buffer.putShort((short)text.getBytes().length);
-            buffer.put(text.getBytes());
-            buffer.putInt(id);
         }
 
         @Override
         public void read(ByteBuffer buffer) {
-            short nlength = buffer.getShort();
-            if(nlength != -1) {
-                byte[] n = new byte[nlength];
-                buffer.get(n);
-                name = new String(n);
-            }
-            short tlength = buffer.getShort();
-            byte[] t = new byte[tlength];
-            buffer.get(t);
+            try{
+                short nlength = buffer.getShort();
+                if(nlength != -1) {
+                    byte[] n = new byte[nlength];
+                    buffer.get(n);
+                    name = new String(n, "UTF-8");
+                }
+                short tlength = buffer.getShort();
+                byte[] t = new byte[tlength];
+                buffer.get(t);
 
-            id = buffer.getInt();
-            text = new String(t);
+                id = buffer.getInt();
+                text = new String(t, "UTF-8");
+            }catch(UnsupportedEncodingException e){
+                throw new RuntimeException(e);
+            }
         }
     }
 
