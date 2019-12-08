@@ -42,6 +42,7 @@ public class ServerControl extends Module {
         Settings.defaultList(
             "shufflemode", "normal",
             "bans", "",
+            "port", port,
             "admins", ""
         );
 
@@ -727,6 +728,20 @@ public class ServerControl extends Module {
                 info("Nobody with that name could be found.");
             }
         });
+        handler.register("port", "[port]", "Sets or displays the port for hosting the server.", arg -> {
+            if(arg.length == 0){
+                info("&lyPort: &lc{0}", Settings.getInt("port"));
+            }else{
+                int port = Strings.parseInt(arg[0]);
+                if(port < 0 || port > 65535){
+                    err("Port must be a number between 0 and 65535.");
+                    return;
+                }
+                info("&lyPort set to {0}.", port);
+                Settings.putString("port", arg[0]);
+                Settings.save();
+            }
+        });
     }
 
     private void readCommands(){
@@ -750,7 +765,7 @@ public class ServerControl extends Module {
 
     private void host(){
         try {
-            Net.host(port);
+            Net.host(Settings.getInt("port"));
         }catch (IOException e){
             Log.err(e);
             state.set(State.menu);
