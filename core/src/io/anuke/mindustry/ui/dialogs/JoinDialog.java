@@ -21,8 +21,6 @@ import io.anuke.ucore.util.Bundles;
 import io.anuke.ucore.util.Log;
 import io.anuke.ucore.util.Strings;
 
-import java.net.InetAddress;
-
 import static io.anuke.mindustry.Vars.player;
 import static io.anuke.mindustry.Vars.ui;
 
