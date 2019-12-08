@@ -765,7 +765,7 @@ public class ServerControl extends Module {
 
     private void host(){
         try {
-            Net.host(port);
+            Net.host(Settings.getInt("port"));
         }catch (IOException e){
             Log.err(e);
             state.set(State.menu);
