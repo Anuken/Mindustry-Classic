@@ -110,7 +110,7 @@ public class Control extends Module{
 			"ip", "localhost",
 			"port", port+"",
 			"name", mobile || gwt ? "player" : UCore.getProperty("user.name"),
-			"servers", "",
+			"servers", "mindustry.kr:6570|||",
 			"color", Color.rgba8888(playerColors[8]),
 			"lastVersion", "3.2",
 			"lastBuild", 0
