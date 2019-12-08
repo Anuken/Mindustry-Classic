@@ -21,6 +21,8 @@ import io.anuke.ucore.util.Bundles;
 import io.anuke.ucore.util.Log;
 import io.anuke.ucore.util.Strings;
 
+import java.net.InetAddress;
+
 import static io.anuke.mindustry.Vars.player;
 import static io.anuke.mindustry.Vars.ui;
 
@@ -92,7 +94,9 @@ public class JoinDialog extends FloatingDialog {
             TextButton[] buttons = {null};
 
             TextButton button = buttons[0] = remote.addButton("[accent]"+server.ip, "clear", () -> {
-                if(!buttons[0].childrenPressed()) connect(server.ip, Vars.port);
+                int port = Vars.port;
+                if(server.port != Vars.port) port = server.port;
+                if(!buttons[0].childrenPressed()) connect(server.ip, port);
             }).width(w).height(150f).pad(4f).get();
 
             button.getLabel().setWrap(true);
@@ -270,7 +274,6 @@ public class JoinDialog extends FloatingDialog {
 
     void connect(String ip, int port){
         ui.loadfrag.show("$text.connecting");
-
         Timers.runTask(2f, () -> {
             try{
                 Vars.netClient.beginConnecting();
