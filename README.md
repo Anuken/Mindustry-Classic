@@ -5,7 +5,7 @@ An old, classic version of the pixelated sandbox tower defense game known as Min
 ### Important Notice
 
 This repository is **no longer being maintained.** No features will be implemented, no bugs will be fixed and no additional releases will be made unless absolutely necessary.
-If you find an issue and know how to fix it, feel free to submit a pull request. **Issues will be ignored.**
+If you find an issue and know how to fix it, feel free to submit a pull request.
 
 ### Building
 
